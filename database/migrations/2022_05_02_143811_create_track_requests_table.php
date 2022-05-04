@@ -18,6 +18,7 @@ class CreateTrackRequestsTable extends Migration
             $table->string('request_type');
             $table->boolean('status')->default(false);
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade')->nullable();
+            $table->foreignId('creator_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade')->nullable();
             $table->json('request_data');
             $table->timestamps();
         });

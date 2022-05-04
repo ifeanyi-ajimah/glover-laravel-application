@@ -4,7 +4,10 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Models\User;
+use App\Http\Resources\UserResource;
+use App\Models\TrackRequest;
+use App\Utils\AppJsonResponse;
 class UserController extends Controller
 {
     /**
@@ -17,15 +20,6 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -33,28 +27,34 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public static function store(Request $request)
+    public static function store( $request, $request_id )
     {
-        //
-    }
+        $user = User::create($request);
+        $trackRequest = TrackRequest::find($request_id);
+        $trackRequest->status = 0;
+        $trackRequest->save(); 
+         
+        $payload = new UserResource( $user );
+        return AppJsonResponse::successResponse(
+            $payload , "Saved Successfully"
+       );
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
   
-
-  
-    public static function update(Request $request, $id)
+    public static function update( $request, $request_id, $user_id )
     {
-        //
+        $user = User::find($user_id);
+        $user->update($request);
+
+        $trackRequest = TrackRequest::find($request_id);
+        $trackRequest->status = 0;
+        $trackRequest->save(); 
+
+        $payload = new UserResource( $user );
+        return AppJsonResponse::successResponse(
+            $payload , "Saved Successfully"
+       );
     }
 
     /**
@@ -63,8 +63,19 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public static function destroy($id)
+    public static function destroy($request_id, $user_id)
     {
-        //
+        $trackRequest = TrackRequest::find($request_id);
+        $trackRequest->status = 0;
+        $trackRequest->save(); 
+
+        $user = User::find($user_id);
+        $user->delete();
+
+        return AppJsonResponse::successResponse(
+             "Deleted Successfully"
+       );
+
+
     }
 }

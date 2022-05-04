@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 use App\Services\TrackRequestService;
 use App\Http\Requests\RegisterUserRequest;
 use App\Http\Resources\TrackRequestResource;
+use App\Models\User;
 use App\Utils\AppJsonResponse;
 
 class TrackRequestController extends Controller
 {
     
-
     private TrackRequestService $trService;
 
     public function __construct(){
@@ -53,16 +53,7 @@ class TrackRequestController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+   
 
     /**
      * Lets you approve the request from the stored request.
@@ -72,7 +63,11 @@ class TrackRequestController extends Controller
      */
     public function approve($id)
     {
-        //
+        $approved = $this->trService->approve($id);
+
+        return AppJsonResponse::successResponse(
+             "Operation Successful"
+       );
     }
 
     /**
@@ -106,7 +101,6 @@ class TrackRequestController extends Controller
         return AppJsonResponse::successResponse(
              "Deleted Successfully"
        );
-        
     }
 
 }
