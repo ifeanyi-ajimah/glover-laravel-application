@@ -8,6 +8,11 @@ use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Models\TrackRequest;
 use App\Utils\AppJsonResponse;
+use App\Mail\RequestApprovedMail;
+use App\Mail\RequestDeclinedMail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+
 class UserController extends Controller
 {
     /**
@@ -33,6 +38,12 @@ class UserController extends Controller
         $trackRequest = TrackRequest::find($request_id);
         $trackRequest->status = 0;
         $trackRequest->save(); 
+
+        $users = User::where('type','admin')->get();
+        foreach($users as $user)
+        {
+        Mail::to($user->email)->send(new RequestApprovedMail($trackRequest, $user));
+        }
          
         $payload = new UserResource( $user );
         return AppJsonResponse::successResponse(
@@ -50,6 +61,12 @@ class UserController extends Controller
         $trackRequest = TrackRequest::find($request_id);
         $trackRequest->status = 0;
         $trackRequest->save(); 
+
+        $users = User::where('type','admin')->get();
+        foreach($users as $user)
+        {
+        Mail::to($user->email)->send(new RequestApprovedMail($trackRequest, $user));
+        }
 
         $payload = new UserResource( $user );
         return AppJsonResponse::successResponse(
@@ -71,6 +88,12 @@ class UserController extends Controller
 
         $user = User::find($user_id);
         $user->delete();
+
+        $users = User::where('type','admin')->get();
+        foreach($users as $user)
+        {
+        Mail::to($user->email)->send(new RequestDeclinedMail($trackRequest, $user));
+        }
 
         return AppJsonResponse::successResponse(
              "Deleted Successfully"
