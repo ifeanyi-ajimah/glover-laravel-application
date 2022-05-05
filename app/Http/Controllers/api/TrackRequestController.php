@@ -70,6 +70,15 @@ class TrackRequestController extends Controller
        );
     }
 
+    public function decline($id)
+    {
+        $approved = $this->trService->decline($id);
+
+        return AppJsonResponse::successResponse(
+             "Decline Operation Successful"
+       );
+    }
+
     /**
      * Update the specified resource in storage.
      *

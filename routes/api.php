@@ -32,6 +32,7 @@ Route::prefix('v1')->group(function(){
         Route::get('all-request', [TrackRequestController::class, 'index']);
         Route::post('store-request', [TrackRequestController::class, 'store']);
         Route::post('approve-request/{id}', [TrackRequestController::class, 'approve']);
+        Route::post('decline-request/{id}', [TrackRequestController::class, 'decline']);
         Route::post('update-request/{id}', [TrackRequestController::class, 'update']);
         Route::post('destroy-request/{id}', [TrackRequestController::class, 'destroy']);
     
