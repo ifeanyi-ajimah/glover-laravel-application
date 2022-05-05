@@ -66,17 +66,17 @@ class TrackRequestService{
 
         switch ($theRequest->request_type) {
             case RequestType::Store:
-                UserController::store( json_decode($theRequest->request_data), $track_request_id);
+                UserController::store( json_decode($theRequest->request_data, true), $track_request_id);
             break;
             case RequestType::Update:
-                UserController::update( json_decode($theRequest->request_data), $track_request_id, $user_id );
+                UserController::update( json_decode($theRequest->request_data, true), $track_request_id, $user_id );
             break;
             case RequestType::Delete:
                 UserController::destroy( $track_request_id , $user_id );
             break;
             
             default:
-            UserController::store( json_decode($theRequest->request_data), $track_request_id);
+            UserController::store( json_decode($theRequest->request_data, true), $track_request_id);
         }
 
     }
